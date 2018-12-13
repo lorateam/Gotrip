@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+        xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:mvc="http://www.springframework.org/schema/mvc"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+            http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd"
+
+>
+    <!-- 声明注解开发方式 -->
+    <mvc:annotation-driven/>
+    <!--包自动扫描-->
+    <context:component-scan base-package="mapper"/>
+    <context:component-scan base-package="controller"/>
+    <context:component-scan base-package="service"/>
+
+    <context:annotation-config />
+    <context:component-scan base-package="controller">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!--<context:component-scan
+    base-package="service">-->
+        <!--<context:include-filter type="annotation" expression="org.springframework.stereotype.Service"/>-->
+    <!--</context:component-scan>-->
+    <!--<context:component-scan base-package="mapper">-->
+        <!--<context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/>-->
+    <!--</context:component-scan>-->
+    <!--静态页面，如html,css,js,images可以访问-->
+    <!--<mvc:default-servlet-handler />-->
+
+    <!--非cntroller转发到默认servlet-->
+    <mvc:default-servlet-handler default-servlet-name="default" />
+    <!--引入fastjson的注释驱动-->
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter"/>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!--拦截器-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <!--默认拦截的连接-->
+            <mvc:mapping path="/admin/*"/>
+            <mvc:mapping path="/foreproduct"/>
+            <!--不拦截的连接-->
+            <bean class="interceptor.AdminInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!-- 视图定位 -->
+    <bean
+            class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass"
+                  value="org.springframework.web.servlet.view.JstlView" />
+        <property name="prefix" value="/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+</beans>

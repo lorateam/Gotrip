@@ -113,12 +113,12 @@
       post, receiver, mobile, 
       userMessage, createDate, payDate, 
       deliveryDate, confirmDate, uid, 
-      status)
+      status, total)
     values (#{id,jdbcType=INTEGER}, #{orderCode,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
       #{post,jdbcType=VARCHAR}, #{receiver,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
       #{userMessage,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{payDate,jdbcType=TIMESTAMP}, 
       #{deliveryDate,jdbcType=TIMESTAMP}, #{confirmDate,jdbcType=TIMESTAMP}, #{uid,jdbcType=INTEGER}, 
-      #{status,jdbcType=VARCHAR})
+      #{status,jdbcType=VARCHAR},#{total,jdbcType=REAL})
   </insert>
   <insert id="insertSelective" parameterType="model.Order">
     insert into Order_

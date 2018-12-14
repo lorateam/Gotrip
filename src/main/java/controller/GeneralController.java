@@ -167,10 +167,12 @@ public class GeneralController {
     @RequestMapping(value = "/forereview", produces = "text/html; charset=UTF-8")
     @ResponseBody
     public ModelAndView review(int oid, HttpServletRequest request)throws Exception{
-        Product product = productService.getProduct((int)request.getSession().getAttribute("pid"));
+        Order order = orderService.getOder(oid);
+        Product product = productService.getProduct(orderItemService.getOrderItem(oid).get(0).getPid());
         List<Review> reviews = reviewService.listReview(product.getId());
         modelAndView.addObject("re", reviews);
         modelAndView.addObject("p",product);
+        modelAndView.addObject("o",order);
         modelAndView.addObject("u",request.getSession().getAttribute("user"));
         modelAndView.setViewName("review");
         return modelAndView;

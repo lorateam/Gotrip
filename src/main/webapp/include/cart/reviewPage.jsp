@@ -42,7 +42,7 @@
 		</div>
 	</div>		
 	
-	<c:if test="${param.showonly==true}">
+	<c:if test="${param.showonly!=true}">
 		<div class="reviewDivlistReviews">
 			<c:forEach items="${re}" var="r">
 				<div class="reviewDivlistReviewsEach">

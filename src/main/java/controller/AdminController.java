@@ -1,12 +1,8 @@
 package controller;
 
 
-import com.sun.org.glassfish.gmbal.ParameterNames;
-import mapper.*;
 import model.*;
-import org.apache.ibatis.session.SqlSession;
 import org.apache.log4j.Logger;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,11 +11,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import service.*;
 import util.ExportExcel;
-import util.MybatisSessionFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +35,16 @@ public class AdminController {
     private static Logger logger = Logger.getLogger(AdminController.class);
     private ModelAndView mav = new ModelAndView();
 
+
+    private ModelAndView listProduct(Integer cid) {
+        List<Product> products = productService.listProducts(cid);
+        mav.addObject("ps",products);
+        mav.addObject("c",categoryService.getCategory(cid));
+        mav.setViewName("/admin/listProduct");
+        return mav;
+    }
+
+    //查询所有房间分类
     @RequestMapping(value = "/admin_category_list",produces = "text/html;charset=UTF-8")
     @ResponseBody
     public ModelAndView listCategory(HttpServletRequest request, HttpServletResponse response) throws Exception{
@@ -50,6 +54,7 @@ public class AdminController {
         return mav;
     }
 
+    //打印页面
     @RequestMapping(value = "/admin_print_category_list",produces = "text/html;charset=UTF-8")
     @ResponseBody
     public ModelAndView printListCategory(HttpServletRequest request, HttpServletResponse response) throws Exception{
@@ -59,6 +64,7 @@ public class AdminController {
         return mav;
     }
 
+    //导出分类EXCEL文件
     @RequestMapping(value = "/admin_export_category_list",produces = "text/html;charset=UTF-8")
     @ResponseBody
     public void exportListCategory(HttpServletRequest request, HttpServletResponse response) throws Exception{
@@ -79,6 +85,7 @@ public class AdminController {
         ExportExcel.exportExcel(request,response,fileName, rowsName, dataList, "yyyy-MM-dd HH:mm:ss");
     }
 
+    //查询所有订单
     @RequestMapping(value = "/admin_order_list",produces = "text/html;charset=UTF-8")
     @ResponseBody
     public ModelAndView listOrder(){
@@ -94,15 +101,12 @@ public class AdminController {
     @RequestMapping(value = "/admin_print_order_list",produces = "text/html;charset=UTF-8")
     @ResponseBody
     public ModelAndView printListOrder(){
-        List<Order> orders = orderService.listAll();
-        for(Order order:orders){
-            order.setOrderItems(orderItemService.getOrderItem(order.getId()));
-        }
-        mav.addObject("os",orders);
+        mav = listOrder();
         mav.setViewName("/admin/printListOrder");
         return mav;
     }
 
+    //导出订单列表
     @RequestMapping(value = "/admin_export_order_list",produces = "text/html;charset=UTF-8")
     @ResponseBody
     public void exportListOrder(HttpServletRequest request, HttpServletResponse response) throws Exception{
@@ -125,16 +129,19 @@ public class AdminController {
         ExportExcel.exportExcel(request,response,fileName, rowsName, dataList, "yyyy-MM-dd HH:mm:ss");
     }
 
+    //查询所有属性
     @RequestMapping(value = "/admin_property_list",produces = "text/html;charset=UTF-8")
     @ResponseBody
     public ModelAndView listProperty(@RequestParam(value = "cid") Integer cid,HttpServletRequest request){
         request.getSession().setAttribute("cid",cid);
         List<Property> properties = productService.listProproty(cid);
         mav.addObject("ps",properties);
+        mav.addObject("c",categoryService.getCategory(cid));
         mav.setViewName("/admin/listProperty");
         return mav;
     }
 
+    //编辑属性名称页面
     @RequestMapping(value = "/admin_property_edit",produces = "text/html;charset=UTF-8")
     @ResponseBody
     public ModelAndView admin_property_edit(@RequestParam(value = "id") Integer id){
@@ -144,41 +151,40 @@ public class AdminController {
         return mav;
     }
 
+    //提交编辑的属性名称
     @RequestMapping(value = "/admin_property_update",produces = "text/html;charset=UTF-8")
     @ResponseBody
-    public ModelAndView admin_property_update(@RequestParam(value = "cid") Integer cid, @RequestParam(value = "id") Integer id,@RequestParam(value = "name") String name){
-        List<Property> properties = productService.listProproty(cid);
+    public ModelAndView admin_property_update(Property record){
+        productService.updateProperty(record);
+        List<Property> properties = productService.listProproty(record.getCid());
         mav.addObject("ps",properties);
         mav.setViewName("/admin/listProperty");
         return mav;
     }
 
+    //删除属性名称
     @RequestMapping(value = "/admin_property_delete",produces = "text/html;charset=UTF-8")
     @ResponseBody
     public ModelAndView admin_property_delete(Integer id,HttpServletRequest request){
-//        productService.deleteProperty(id);
-        List<Property> properties = productService.listProproty((Integer)request.getSession().getAttribute("cid"));
-        mav.addObject("ps",properties);
-        mav.setViewName("/admin/listProperty");
         try{
             productService.deleteProperty(id);
         }catch (Exception e){
             e.printStackTrace();
         }
+        List<Property> properties = productService.listProproty((Integer)request.getSession().getAttribute("cid"));
+        mav.addObject("ps",properties);
+        mav.setViewName("/admin/listProperty");
         return mav;
     }
 
     //房间管理
     @RequestMapping(value = "/admin_product_list",produces = "text/html;charset=UTF-8")
     @ResponseBody
-    public ModelAndView admin_product_list(@RequestParam(value = "cid") Integer cid,HttpServletRequest request){
-        List<Product> products = productService.listProducts(cid);
-        mav.addObject("ps",products);
-        mav.addObject("c",categoryService.getCategory(cid));
-        mav.setViewName("/admin/listProduct");
-        return mav;
+    public ModelAndView admin_product_list(Integer cid){
+        return listProduct(cid);
     }
 
+    //添加房间
     @RequestMapping(value = "/admin_product_add",produces = "text/html;charset=UTF-8")
     @ResponseBody
     public ModelAndView admin_product_add(Product product,HttpServletRequest request){
@@ -190,17 +196,15 @@ public class AdminController {
         return mav;
     }
 
+    //删除房间
     @RequestMapping(value = "/admin_product_delete",produces = "text/html;charset=UTF-8")
     @ResponseBody
     public ModelAndView admin_product_delete(Integer id,Integer cid, HttpServletRequest request){
         productService.delete(id);
-        List<Product> products = productService.listProducts(cid);
-        mav.addObject("ps",products);
-        mav.addObject("c",categoryService.getCategory(cid));
-        mav.setViewName("/admin/listProduct");
-        return mav;
+        return listProduct(cid);
     }
 
+    //房间图片管理页面
     @RequestMapping(value = "/admin_productImage_list",produces = "text/html;charset=UTF-8")
     @ResponseBody
     public ModelAndView admin_productImage_list(Integer pid, HttpServletRequest request){
@@ -214,9 +218,10 @@ public class AdminController {
         return mav;
     }
 
-    @RequestMapping(value = "/admin_product_edit",produces = "text/html;charset=UTF-8")
+    //更改房间属性选项
+    @RequestMapping(value = "/admin_product_editPropertyValue",produces = "text/html;charset=UTF-8")
     @ResponseBody
-    public ModelAndView admin_product_edit(Integer id, HttpServletRequest request){
+    public ModelAndView admin_product_editPropertyValue(Integer id, HttpServletRequest request){
         Product product = productService.getProduct(id);
         List<Propertyvalue> values = productService.listProprotyValue(id);
         for(Propertyvalue p: values){
@@ -228,6 +233,33 @@ public class AdminController {
         return mav;
     }
 
+    //提交更新房间属性值
+    @RequestMapping(value = "/admin_product_updatePropertyValue",produces = "text/html;charset=UTF-8")
+    @ResponseBody
+    public String admin_product_updatePropertyValue(Integer id, Integer pvid, String value){
+        productService.updatePropertyValue(pvid, value);
+        return "success";
+    }
+
+    //提交房间修改信息
+    @RequestMapping(value = "/admin_product_update",produces = "text/html;charset=UTF-8")
+    @ResponseBody
+    public ModelAndView admin_product_update(Product product){
+        productService.update(product);
+        return admin_product_list(product.getCid());
+    }
+
+    //编辑房间信息页面
+    @RequestMapping(value = "/admin_product_edit",produces = "text/html;charset=UTF-8")
+    @ResponseBody
+    public ModelAndView admin_product_edit(Integer id, HttpServletRequest request){
+        Product product = productService.getProduct(id);
+        mav.addObject("p",product);
+        mav.setViewName("/admin/editProduct");
+        return mav;
+    }
+
+    //编辑房间分类页面
     @RequestMapping(value = "/admin_category_edit",produces = "text/html;charset=UTF-8")
     @ResponseBody
     public ModelAndView admin_category_edit(Integer id, HttpServletRequest request){
@@ -236,7 +268,8 @@ public class AdminController {
         mav.setViewName("/admin/editCategory");
         return mav;
     }
-    //用户管理
+
+    //查询所有用户
     @RequestMapping(value = "/admin_user_list",produces = "text/html;charset=UTF-8")
     @ResponseBody
     public ModelAndView listUser(){
@@ -276,15 +309,8 @@ public class AdminController {
         ExportExcel.exportExcel(request,response,fileName, rowsName, dataList, "yyyy-MM-dd HH:mm:ss");
     }
 
-    @RequestMapping(value = "/admin_user_edit",produces = "text/html;charset=UTF-8")
-    @ResponseBody
-    public ModelAndView admin_user_edit(Integer id, HttpServletRequest request){
-        User user = userService.getUser(id);
-        mav.addObject("u",user);
-        mav.setViewName("/admin/editUser");
-        return mav;
-    }
 
+    //删除用户
     @RequestMapping(value = "/admin_user_delete",produces = "text/html;charset=UTF-8")
     @ResponseBody
     public ModelAndView admin_user_delete(Integer id, HttpServletRequest request){
@@ -299,8 +325,17 @@ public class AdminController {
         return mav;
     }
 
+    //编辑用户信息页面
+    @RequestMapping(value = "/admin_user_edit",produces = "text/html;charset=UTF-8")
+    @ResponseBody
+    public ModelAndView admin_user_edit(Integer id, HttpServletRequest request){
+        User user = userService.getUser(id);
+        mav.addObject("u",user);
+        mav.setViewName("/admin/editUser");
+        return mav;
+    }
 
-    //    need to fix it,it doesn't works
+    //提交更新用户信息
     @RequestMapping(value = "/admin_user_update",produces = "text/html;charset=UTF-8")
     @ResponseBody
     public ModelAndView admin_user_update(User user){
@@ -312,6 +347,7 @@ public class AdminController {
         return mav;
     }
 
+    //添加用户
     @RequestMapping(value = "/admin_user_add",produces = "text/html;charset=UTF-8")
     @ResponseBody
     public ModelAndView admin_user_add(User user,HttpServletRequest request){
@@ -323,25 +359,29 @@ public class AdminController {
     }
 
 
+    //修改订单信息页面
     @RequestMapping(value = "/admin_order_edit",produces = "text/html;charset=UTF-8")
     @ResponseBody
     public ModelAndView admin_order_edit(Integer id, HttpServletRequest request){
         Order order = orderService.getOder(id);
         request.getSession().setAttribute("oid",id);
-        mav.addObject("o",order);
+        mav.addObject("c",order);
         mav.setViewName("/admin/editOrder");
         return mav;
     }
 
+    //提交修改订单信息
     @RequestMapping(value = "/admin_order_update",produces = "text/html;charset=UTF-8")
     @ResponseBody
-    public ModelAndView admin_order_update(@RequestParam(value = "id") Integer id,@RequestParam(value = "name") String name,@RequestParam(value = "password") String password){
+    public ModelAndView admin_order_update(Order order){
+        orderService.update(order);
         List<Order> orders = orderService.listAll();
         mav.addObject("os",orders);
         mav.setViewName("/admin/listOrder");
         return mav;
     }
 
+    //添加订单
     @RequestMapping(value = "/admin_order_add",produces = "text/html;charset=UTF-8")
     @ResponseBody
     public ModelAndView admin_order_add(Order order,HttpServletRequest request){
@@ -353,6 +393,7 @@ public class AdminController {
         return mav;
     }
 
+    //删除订单
     @RequestMapping(value = "/admin_order_delete",produces = "text/html;charset=UTF-8")
     @ResponseBody
     public ModelAndView admin_order_delete(Integer id, HttpServletRequest request){
@@ -363,6 +404,7 @@ public class AdminController {
         return mav;
     }
 
+    //删除房间分类
     @RequestMapping(value = "/admin_category_delete",produces = "text/html;charset=UTF-8")
     @ResponseBody
     public ModelAndView admin_category_delete(Integer id, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -373,4 +415,16 @@ public class AdminController {
         }
         return listCategory(request, response);
     }
+
+    //添加属性
+    @RequestMapping(value = "/admin_property_add",produces = "text/html;charset=UTF-8")
+    @ResponseBody
+    public ModelAndView admin_property_add(Property property) throws Exception {
+        productService.newProperty(property);
+        List<Property> properties = productService.listProproty(property.getCid());
+        mav.addObject("ps",properties);
+        mav.setViewName("/admin/listProperty");
+        return mav;
+    }
+
 }

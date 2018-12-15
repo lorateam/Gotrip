@@ -4,6 +4,7 @@ import model.Product;
 import model.Productimage;
 import model.Property;
 import model.Propertyvalue;
+import org.springframework.beans.PropertyValue;
 
 import java.util.List;
 
@@ -28,5 +29,11 @@ public interface ProductInt {
 
     void deleteProperty(int id);
 
+    void updateProperty(Property record);
+
+    void newProperty(Property record);
+
     List<Productimage> listProductImage(int product_id);
+
+    void updatePropertyValue(int id, String value);
 }

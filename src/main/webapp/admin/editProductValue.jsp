@@ -16,9 +16,10 @@ $(function() {
 		var pvid = $(this).attr("pvid");
 		var parentSpan = $(this).parent("span");
 		parentSpan.css("border","1px solid yellow");
-		$.post(
+        console.log("修改属性值:",value,pvid);
+        $.post(
 			    page,
-			    {"value":value,"pvid":pvid},
+			    {"value":value,"pvid":pvid,"id":${p.id}},
 			    function(result){
 			    	if("success"==result)
 						parentSpan.css("border","1px solid green");

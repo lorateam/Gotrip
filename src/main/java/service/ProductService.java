@@ -2,6 +2,7 @@ package service;
 
 import mapper.*;
 import model.*;
+import model.Propertyvalue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,7 @@ public class ProductService implements ProductInt {
         p.setSaleCount(orderitemMapper.countByPid(id));
         p.setFirstProductImage(productimageMapper.selectOneByPid(id));
         p.setReviewCount(reviewMapper.countByPid(p.getId()));
+        p.setCategory(categoryMapper.selectByPrimaryKey(p.getCid()));
         return p;
     }
     @Override
@@ -89,8 +91,23 @@ public class ProductService implements ProductInt {
     public void deleteProperty(int id){
         propertyMapper.deleteByPrimaryKey(id);
     }
+
+    @Override
+    public void updateProperty(Property record){
+        propertyMapper.updateByPrimaryKey(record);
+    }
     @Override
     public List<Productimage> listProductImage(int product_id){
         return productimageMapper.selectByPid(product_id);
+    }
+
+    @Override
+    public void newProperty(Property record){
+        propertyMapper.insert(record);
+    }
+
+    @Override
+    public void updatePropertyValue(int id, String value){
+        propertyvalueMapper.updateValue(id, value);
     }
 }

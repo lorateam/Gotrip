@@ -24,6 +24,9 @@ public interface PropertyvalueMapper {
     @Select("select * from PropertyValue where id = #{pid}")
     List<Propertyvalue> selectByPid(Integer pid);
 
+    @Select("update PropertyValue set value = #{value} where id = #{id}")
+    List<Propertyvalue> updateValue(@Param("id") int id,@Param("value") String value);
+
     @Select("select * from PropertyValue where pid =#{pid} order by ptid desc")
     List<Propertyvalue> list(int pid);
 

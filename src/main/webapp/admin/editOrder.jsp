@@ -36,8 +36,16 @@
             <form method="post" id="editForm" action="admin_order_update"  enctype="multipart/form-data">
                 <table class="editTable">
                     <tr>
-                        <td>订单名称</td>
-                        <td><input  id="name" name="name" value="${c.name}" type="text" class="form-control"></td>
+                        <td>订单状态</td>
+                        <td><input  id="status" name="status" value="${c.status}" type="text" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <td>订单金额</td>
+                        <td><input  id="total" name="total" value="${c.total}" type="number" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <td>游客姓名</td>
+                        <td><input  id="receiver" name="receiver" value="${c.receiver}" type="text" class="form-control"></td>
                     </tr>
                     <tr class="submitTR">
                         <td colspan="2" align="center">

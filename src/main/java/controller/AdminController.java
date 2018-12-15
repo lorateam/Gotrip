@@ -2,18 +2,23 @@ package controller;
 
 
 import model.*;
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import service.*;
 import util.ExportExcel;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +52,7 @@ public class AdminController {
     //查询所有房间分类
     @RequestMapping(value = "/admin_category_list",produces = "text/html;charset=UTF-8")
     @ResponseBody
-    public ModelAndView listCategory(HttpServletRequest request, HttpServletResponse response) throws Exception{
+    public ModelAndView listCategory(){
         List<Category> categories = categoryService.listAll();
         mav.addObject("thecs", categories);
         mav.setViewName("admin/listCategory");
@@ -57,7 +62,7 @@ public class AdminController {
     //打印页面
     @RequestMapping(value = "/admin_print_category_list",produces = "text/html;charset=UTF-8")
     @ResponseBody
-    public ModelAndView printListCategory(HttpServletRequest request, HttpServletResponse response) throws Exception{
+    public ModelAndView printListCategory(){
         List<Category> categories = categoryService.listAll();
         mav.addObject("thecs", categories);
         mav.setViewName("admin/printListCategory");
@@ -83,6 +88,22 @@ public class AdminController {
         String fileName = "exportCategoriesExcel";
         //执行导出
         ExportExcel.exportExcel(request,response,fileName, rowsName, dataList, "yyyy-MM-dd HH:mm:ss");
+    }
+
+    //添加分类
+    //特别注意，由于本操作涉及图片保存，更换运行环境是需要重新配置路径
+    @RequestMapping(value = "/admin_category_add",produces = "text/html;charset=UTF-8")
+    @ResponseBody
+    public ModelAndView admin_category_add(@RequestParam("name") String name, @RequestParam("filepath") MultipartFile filepath) throws IOException {
+        Category category = new Category();
+        category.setName(name);
+        Integer cid = categoryService.insert(category);
+        String path1 = "C:\\Users\\70953\\github\\Gotrip\\src\\main\\webapp\\img\\category\\"+cid.toString()+".jpg";
+        String path2 = "C:\\Users\\70953\\github\\Gotrip\\target\\Gotrip\\img\\category\\"+cid.toString()+".jpg";
+        filepath.transferTo(new File(path1));
+        FileUtils.copyFile(new File(path1),new File(path2));
+        mav = listCategory();
+        return mav;
     }
 
     //查询所有订单
@@ -402,6 +423,16 @@ public class AdminController {
         return mav;
     }
 
+    //超时三天未评论的订单
+    @RequestMapping(value = "/outdate_order",produces = "text/html;charset=UTF-8")
+    @ResponseBody
+    public ModelAndView outdate_order(){
+        List<Order> orders = orderService.outDateOrder();
+        mav.addObject("os",orders);
+        mav.setViewName("/admin/listOrder");
+        return mav;
+    }
+
     //添加订单
     @RequestMapping(value = "/admin_order_add",produces = "text/html;charset=UTF-8")
     @ResponseBody
@@ -432,7 +463,7 @@ public class AdminController {
         } catch (Exception e) {
             e.getMessage();
         }
-        return listCategory(request, response);
+        return listCategory();
     }
 
     //添加属性

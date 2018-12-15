@@ -92,6 +92,7 @@ public class GeneralController {
         request.getSession(true).setAttribute("pid",orderitem.getPid());
         Product product = productService.getProduct(orderitem.getPid());
         product.setSaleCount(product.getSaleCount()+orderitem.getNumber());
+        product.setStock(product.getStock()-orderitem.getNumber());
         productService.update(product);
         modelAndView.addObject("ois",map.get("ois"));
         modelAndView.addObject("total",((Order)map.get("order")).getTotal());
@@ -124,9 +125,11 @@ public class GeneralController {
         origin_order.setUserMessage(order.getUserMessage());
         origin_order.setStatus("waitReview");
         origin_order.setPayDate(new Date());
-
+        if(order.getReceiver()==null || order.getReceiver().equals("")){
+            User user = (User)request.getSession().getAttribute("user");
+            order.setReceiver(user.getName());
+        }
         orderService.update(origin_order);
-
         modelAndView.addObject("o",origin_order);
         modelAndView.setViewName("/confirmPay");
         return modelAndView;
@@ -151,7 +154,6 @@ public class GeneralController {
     @RequestMapping(value = "/deleteorder", produces = "text/html; charset=UTF-8")
     @ResponseBody
     public void deleteorder(HttpServletRequest request,HttpServletResponse response, Integer oid) throws Exception{
-        User user = (User) request.getSession().getAttribute("user");
         orderService.deleteOrder(oid);
         response.sendRedirect("forebought");
     }

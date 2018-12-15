@@ -28,4 +28,9 @@ public class CategoryService implements CategoryInt{
     public void delete(int id){
         categoryMapper.deleteByPrimaryKey(id);
     }
+    @Override
+    public Integer insert(Category category){
+        categoryMapper.insert(category);
+        return categoryMapper.selectNew(category.getName());
+    }
 }

@@ -29,6 +29,9 @@ public interface OrderMapper {
     @Select("select * from Order_ where uid=#{uid}")
     List<Order> selectByUid(Integer uid);
 
+    @Select("select * from Order_ where payDate < date_sub(CURDATE(),INTERVAL 3 DAY);")
+    List<Order> outDateOrder();
+
     @Select("select * from Order_ where status like #{status} and total>=#{min} and total<=#{max}")
     List<Order> selectOrder(@Param("status") String status, @Param("min") Integer min,@Param("max") Integer max);
 

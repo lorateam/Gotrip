@@ -77,4 +77,10 @@ public class OrderService implements OrderInt {
     public void insert(Order order){
         orderMapper.insert(order);
     }
+
+    @Override
+    public List<Order> outDateOrder() {
+        List<Order> orders= orderMapper.outDateOrder();
+        return getOrders(orders);
+    }
 }

@@ -26,13 +26,12 @@ $(function(){
 
 <div class="workingArea">
 	<h1 class="label label-info" >订单管理</h1>
-	<br>
-	<br>
-	<a href="admin_export_order_list">导出</a>
-	<a href="admin_print_order_list">打印</a>
+	<br/>
+	<a  class="btn btn-success" href="admin_export_order_list">导出</a>
+	<a class="btn btn-success"  href="admin_print_order_list">打印</a>
+	<br/>
+	<br/>
 	<h1 class="label label-info" >条件查询</h1>
-	<br>
-	<br>
 	<form action="select_order_list">
 		<div>
 			<div class="Connection">
@@ -51,15 +50,23 @@ $(function(){
 					最高金额：<input name="max" type="number" class="common-input">
 				</div>
 			</div>
-			<div class="Connection">
-				<div class="cell-left">
-					<input type="hidden" name="id" value="${o.id}">
-					<button type="submit" class="btn btn-success" style="margin: 0px">提 交</button>
-				</div>
+
+		</div>
+		<div class="Connection">
+			<div class="cell-left">
+				<input type="hidden" name="id" value="${o.id}">
+				<button type="submit" class="btn btn-success" style="margin: 0px">提 交</button>
 			</div>
 		</div>
 		</table>
 	</form>
+
+	<h1 class="label label-info" >超过三天未评论订单</h1>
+	<br>
+	<a class="btn btn-success"  href="outdate_order">筛选</a>
+	<br>
+
+	<br>
 	<div class="listDataTableDiv">
 		<table class="table table-striped table-bordered table-hover1  table-condensed">
 			<thead>

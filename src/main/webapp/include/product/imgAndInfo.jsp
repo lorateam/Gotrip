@@ -72,6 +72,16 @@ $(function(){
     });
     $(".buyLink").click(function(){
         var page = "forecheckLogin";
+        var num= $(".productNumberSetting").val();
+        num = parseInt(num);
+        if(num>stock){
+            alert("剩余房间不足，无法预定！");
+            return false;
+        }
+        if(num<1){
+            alert("非法数值，请输入正整数！");
+            return false;
+        }
         $.get(
                 page,
                 function(result){

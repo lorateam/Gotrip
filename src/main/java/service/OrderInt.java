@@ -19,4 +19,5 @@ public interface OrderInt {
 
     void insert(Order order);
     List<Order> selectOrder(String status, Integer min, Integer max);
+    List<Order> outDateOrder();
 }

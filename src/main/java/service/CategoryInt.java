@@ -12,4 +12,6 @@ public interface CategoryInt {
     List<Category> listAll();
 
     void delete(int id);
+
+    Integer insert(Category category);
 }

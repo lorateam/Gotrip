@@ -76,7 +76,7 @@ $(function(){
 	    			<tr>
 	    				<td>分类图片</td>
 	    				<td>
-	    					<input id="categoryPic" accept="image/*" type="file" name="filepath" />
+	    					<input id="categoryPic" accept="image/jpg" type="file" name="filepath" />
 	    				</td>
 	    			</tr>
 	    			<tr class="submitTR">

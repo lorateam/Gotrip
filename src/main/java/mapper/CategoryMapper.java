@@ -36,4 +36,7 @@ public interface CategoryMapper {
     int updateByPrimaryKeySelective(Category record);
 
     int updateByPrimaryKey(Category record);
+
+    @Select("select id from category where name=#{name}")
+    Integer selectNew(String name);
 }

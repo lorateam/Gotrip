@@ -363,10 +363,32 @@ public class AdminController {
     @RequestMapping(value = "/admin_order_edit",produces = "text/html;charset=UTF-8")
     @ResponseBody
     public ModelAndView admin_order_edit(Integer id, HttpServletRequest request){
-        Order order = orderService.getOder(id);
+        Order order = orderService.getOrder(id);
         request.getSession().setAttribute("oid",id);
         mav.addObject("c",order);
         mav.setViewName("/admin/editOrder");
+        return mav;
+    }
+
+    //条件查询订单
+    @RequestMapping(value = "/select_order_list",produces = "text/html;charset=UTF-8")
+    @ResponseBody
+    public ModelAndView select_order_list(@RequestParam("status") String status, @RequestParam("min") Integer min, @RequestParam("max") Integer max){
+        if(status==null || status.equals("")){
+            status = "%";
+        }
+        if(min==null){
+            min = -1;
+        }
+        if(max==null){
+            max = Integer.MAX_VALUE;
+        }
+        List<Order> orders = orderService.selectOrder(status,min,max);
+        for(Order order:orders){
+            order.setOrderItems(orderItemService.getOrderItem(order.getId()));
+        }
+        mav.addObject("os",orders);
+        mav.setViewName("/admin/listOrder");
         return mav;
     }
 
@@ -375,8 +397,7 @@ public class AdminController {
     @ResponseBody
     public ModelAndView admin_order_update(Order order){
         orderService.update(order);
-        List<Order> orders = orderService.listAll();
-        mav.addObject("os",orders);
+        mav = listOrder();
         mav.setViewName("/admin/listOrder");
         return mav;
     }
@@ -387,8 +408,7 @@ public class AdminController {
     public ModelAndView admin_order_add(Order order,HttpServletRequest request){
         request.getSession().setAttribute("id",order.getId());
         orderService.insert(order);
-        List<Order> orders = orderService.listAll();
-        mav.addObject("os",orders);
+        mav = listOrder();
         mav.setViewName("/admin/listOrder");
         return mav;
     }
@@ -396,10 +416,9 @@ public class AdminController {
     //删除订单
     @RequestMapping(value = "/admin_order_delete",produces = "text/html;charset=UTF-8")
     @ResponseBody
-    public ModelAndView admin_order_delete(Integer id, HttpServletRequest request){
+    public ModelAndView admin_order_delete(Integer id){
         orderService.deleteOrder(id);
-        List<Order> orders = orderService.listAll();
-        mav.addObject("os",orders);
+        mav = listOrder();
         mav.setViewName("/admin/listOrder");
         return mav;
     }

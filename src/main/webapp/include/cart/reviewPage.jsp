@@ -66,6 +66,7 @@
 			<div class="makeReviewButtonDiv">
 				<input type="hidden" name="uid" value="${u.id}">
 				<input type="hidden" name="pid" value="${p.id}">
+				<input type="hidden" name="oid" value="${o.id}">
 				<button type="submit" class="confirmPayButton">提交评价</button>
 			</div>
 		</form>

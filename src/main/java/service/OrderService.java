@@ -24,6 +24,7 @@ public class OrderService implements OrderInt {
     ReviewMapper reviewMapper;
     @Autowired
     UserMapper userMapper;
+
     @Override
     public List<Order> getOrders(User user){
         List<Order> orders = orderMapper.selectByUid(user.getId());
@@ -43,17 +44,27 @@ public class OrderService implements OrderInt {
     @Override
     public List<Order> listAll(){
         List<Order> orders = orderMapper.selectAll();
+        return getOrders(orders);
+    }
+    @Override
+    public Order getOrder(int id){
+        return orderMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public List<Order> selectOrder(String status, Integer min, Integer max){
+        List<Order> orders = orderMapper.selectOrder(status, min, max);
+        return getOrders(orders);
+    }
+
+    private List<Order> getOrders(List<Order> orders) {
         for (Order order: orders){
             order.setUser(userMapper.selectByPrimaryKey(order.getUid()));
             order.setTotalNumber(orderitemMapper.countNumber(order.getId()));
         }
-
         return orders;
     }
-    @Override
-    public Order getOder(int id){
-        return orderMapper.selectByPrimaryKey(id);
-    }
+
     @Override
     public void deleteOrder(int oid){
         orderMapper.deleteByPrimaryKey(oid);

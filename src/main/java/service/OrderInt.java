@@ -12,10 +12,11 @@ public interface OrderInt {
 
     List<Order> listAll();
 
-    Order getOder(int id);
+    Order getOrder(int id);
     void deleteOrder(int oid);
 
     void update(Order order);
 
     void insert(Order order);
+    List<Order> selectOrder(String status, Integer min, Integer max);
 }

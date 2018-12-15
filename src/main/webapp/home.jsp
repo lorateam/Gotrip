@@ -6,6 +6,8 @@
 <html lang="ja">
 
 <body>
+<%@include file="include/search.jsp"%>
+
 <div class="swiper-container">
 	<div class="swiper-wrapper">
 		<div class="swiper-slide">
@@ -35,7 +37,6 @@
 
 </div>
 
-<%@include file="include/search.jsp"%>
 <section id="concept">
 	<div class="container">
 		<div class="row">

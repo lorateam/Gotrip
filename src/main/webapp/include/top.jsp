@@ -48,7 +48,7 @@
 					<ul>
 						<li><a href="${pageContext.request.contextPath}/forestory">故事/体验</a></li>
 						<li><a href="${pageContext.request.contextPath}/home">房源</a></li>
-						<li><a href="${pageContext.request.contextPath}/admin/admin_category_list">发布</a></li>
+						<li><a href="${pageContext.request.contextPath}/admin/admin_category_list">管理</a></li>
 						<c:if test="${empty user}">
 							<li><a href="${pageContext.request.contextPath}/register.jsp">免费注册</a></li>
 						</c:if>

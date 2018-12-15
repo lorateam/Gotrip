@@ -11,7 +11,17 @@ public class Review {
 
     private Integer pid;
 
+    private Integer oid;
+
     private Date createDate;
+
+    public Integer getOid() {
+        return oid;
+    }
+
+    public void setOid(Integer oid) {
+        this.oid = oid;
+    }
 
     public Integer getId() {
         return id;

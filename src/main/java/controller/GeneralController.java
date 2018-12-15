@@ -5,7 +5,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import service.*;
@@ -167,7 +166,7 @@ public class GeneralController {
     @RequestMapping(value = "/forereview", produces = "text/html; charset=UTF-8")
     @ResponseBody
     public ModelAndView review(int oid, HttpServletRequest request)throws Exception{
-        Order order = orderService.getOder(oid);
+        Order order = orderService.getOrder(oid);
         Product product = productService.getProduct(orderItemService.getOrderItem(oid).get(0).getPid());
         List<Review> reviews = reviewService.listReview(product.getId());
         modelAndView.addObject("re", reviews);
@@ -185,6 +184,9 @@ public class GeneralController {
         Product product = productService.getProduct(review.getPid());
         product.setReviewCount(product.getReviewCount()+1);
         productService.update(product);
-        return bought(request);
+        Order order = orderService.getOrder(review.getOid());
+        order.setStatus("reviewed");
+        orderService.update(order);
+        return review(review.getOid(),request);
     }
 }

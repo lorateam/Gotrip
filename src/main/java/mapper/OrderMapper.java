@@ -1,6 +1,8 @@
 package mapper;
 
 import java.util.List;
+
+import com.sun.tools.corba.se.idl.constExpr.Or;
 import model.Order;
 import model.OrderExample;
 import org.apache.ibatis.annotations.Param;
@@ -26,6 +28,9 @@ public interface OrderMapper {
 
     @Select("select * from Order_ where uid=#{uid}")
     List<Order> selectByUid(Integer uid);
+
+    @Select("select * from Order_ where status like #{status} and total>=#{min} and total<=#{max}")
+    List<Order> selectOrder(@Param("status") String status, @Param("min") Integer min,@Param("max") Integer max);
 
     Order selectByPrimaryKey(Integer id);
 

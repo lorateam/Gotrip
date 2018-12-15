@@ -47,15 +47,13 @@
 							<li><a href="${pageContext.request.contextPath}/admin/admin_category_list">房源管理</a></li>
 							<li><a href="${pageContext.request.contextPath}/admin/admin_user_list">用户管理</a></li>
 							<li><a href="${pageContext.request.contextPath}/admin/admin_order_list">订单管理</a></li>
-							<li><a href="${pageContext.request.contextPath}/forestory">故事管理</a></li>
 							<li><a href="${pageContext.request.contextPath}/register.jsp">免费注册</a></li>
-
 						</ul>
 					</nav>
 				</div>
 				<div class="three columns">
-					<a href="contact.html" class="header_contact">联系</a>
-					<div class="top-number"><p><i class="fa fa-phone-square"></i>13928712412</p></div>
+					<a href="#" class="header_contact">联系</a>
+					<div class="top-number"><p><i class="fa fa-phone-square"></i>12346</p></div>
 				</div>
 			</div>
 		</div>

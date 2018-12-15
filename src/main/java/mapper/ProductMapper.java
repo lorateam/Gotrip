@@ -24,7 +24,7 @@ public interface ProductMapper {
     @Select("select * from Product where cid = #{cid}")
     List<Product> selectByCid(Integer cid);
 
-    @Select("select * from Product where name = #{name}")
+    @Select("select * from Product where name like #{name}")
     List<Product> selectByName(String name);
 
     Product selectByPrimaryKey(Integer id);

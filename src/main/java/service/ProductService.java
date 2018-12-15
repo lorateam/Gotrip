@@ -57,15 +57,16 @@ public class ProductService implements ProductInt {
     @Override
     public List<Product> listProducts(int cid){
         List<Product> ps = productMapper.selectByCid(cid);
-        for(Product p:ps){
-            p.setFirstProductImage(productimageMapper.selectOneByPid(p.getId()));
-            p.setReviewCount(reviewMapper.countByPid(p.getId()));
-        }
-        return ps;
+        return getProducts(ps);
     }
     @Override
     public List<Product> listProducts(String keyword){
+        keyword = "%"+keyword+"%";
         List<Product> ps = productMapper.selectByName(keyword);
+        return getProducts(ps);
+    }
+
+    private List<Product> getProducts(List<Product> ps) {
         for(Product p:ps){
             p.setFirstProductImage(productimageMapper.selectOneByPid(p.getId()));
             p.setReviewCount(reviewMapper.countByPid(p.getId()));
@@ -73,6 +74,7 @@ public class ProductService implements ProductInt {
         }
         return ps;
     }
+
     @Override
     public List<Propertyvalue> listProprotyValue(int product_id){
         return propertyvalueMapper.list(product_id);

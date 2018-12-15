@@ -20,7 +20,7 @@
 
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
         <!-- 基本属性 url、user、password -->
-        <property name="url" value="jdbc:mysql://tx.3cat.top:3306/minsu?characterEncoding=UTF-8"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/minsu?characterEncoding=UTF-8"/>
         <property name="username" value="root"/>
         <property name="password" value="123"/>
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>

@@ -14,9 +14,15 @@ $(function(){
 });
 
 </script>
+<style>
+	.Connection{
+		display: inline-block;
+		position: relative;
+		margin: 0 5px 0 0;
+	}
+</style>
 
 <title>订单管理</title>
-
 
 <div class="workingArea">
 	<h1 class="label label-info" >订单管理</h1>
@@ -24,6 +30,36 @@ $(function(){
 	<br>
 	<a href="admin_export_order_list">导出</a>
 	<a href="admin_print_order_list">打印</a>
+	<h1 class="label label-info" >条件查询</h1>
+	<br>
+	<br>
+	<form action="select_order_list">
+		<div>
+			<div class="Connection">
+				<div class="cell-left">
+					状态：<input name="status" type="text" class="common-input" value="waitReview">
+				</div>
+			</div>
+
+			<div class="Connection">
+				<div class="cell-left">
+					最低金额：<input name="min" type="number" class="common-input">
+				</div>
+			</div>
+			<div class="Connection">
+				<div class="cell-left">
+					最高金额：<input name="max" type="number" class="common-input">
+				</div>
+			</div>
+			<div class="Connection">
+				<div class="cell-left">
+					<input type="hidden" name="id" value="${o.id}">
+					<button type="submit" class="btn btn-success" style="margin: 0px">提 交</button>
+				</div>
+			</div>
+		</div>
+		</table>
+	</form>
 	<div class="listDataTableDiv">
 		<table class="table table-striped table-bordered table-hover1  table-condensed">
 			<thead>
@@ -62,9 +98,9 @@ $(function(){
 								<table width="800px" align="center" class="orderPageOrderItemTable">
 									<c:forEach items="${o.orderItems}" var="oi">
 										<tr>
-											<%--<td align="left">--%>
-												<%--<img width="40px" height="40px" src="img/productSingle/${oi.product.firstProductImage.id}.jpg">--%>
-											<%--</td>	--%>
+											<td align="left">
+												<img width="40px" height="40px" src="img/productSingle_middle/${oi.product.firstProductImage.id}.jpg">
+											</td>
 											
 											<td>
 												<a href="foreproduct?pid=${oi.product.id}">
@@ -96,47 +132,49 @@ $(function(){
 	<%--<div class="pageDiv">--%>
 		<%--<%@include file="../include/admin/adminPage.jsp" %>--%>
 	<%--</div>--%>
-	<div class="panel panel-warning addDiv">
-		<div class="panel-heading">新增订单</div>
-		<div class="panel-body">
-			<form method="post" id="addForm" action="admin_user_add">
-				<table class="addTable">
-					<tr>
-						<td>状态</td>
-						<td><input id="status" name="status" type="text"
-								   class="form-control"></td>
-					</tr>
-					<tr>
-						<td>金额</td>
-						<td><input id="total" name="total" type="text"
-								   class="form-control"></td>
-					</tr>
-					<tr>
-						<td>房间数量</td>
-						<td><input id="totalNumber" name="totalNumber" type="text"
-								   class="form-control"></td>
-					</tr>
-					<tr>
-						<td>买家名称</td>
-						<td><input id="name" name="name" type="text"
-								   class="form-control"></td>
-					</tr>
-					<tr>
-						<td>支付时间</td>
-						<td><input id="payDate" name="payDate" type="text"
-								   class="form-control"></td>
-					</tr>
+	<%--<div class="panel panel-warning addDiv">--%>
+		<%--<div class="panel-heading">新增订单</div>--%>
+		<%--<div class="panel-body">--%>
+			<%--<form method="post" id="addForm" action="admin_user_add">--%>
+				<%--<table class="addTable">--%>
+					<%--<tr>--%>
+						<%--<td>状态</td>--%>
+						<%--<td><input id="status" name="status" type="text"--%>
+								   <%--class="form-control"></td>--%>
+					<%--</tr>--%>
+					<%--<tr>--%>
+						<%--<td>金额</td>--%>
+						<%--<td><input id="total" name="total" type="text"--%>
+								   <%--class="form-control"></td>--%>
+					<%--</tr>--%>
+					<%--<tr>--%>
+						<%--<td>房间数量</td>--%>
+						<%--<td><input id="totalNumber" name="totalNumber" type="text"--%>
+								   <%--class="form-control"></td>--%>
+					<%--</tr>--%>
+					<%--<tr>--%>
+						<%--<td>买家名称</td>--%>
+						<%--<td><input id="name" name="name" type="text"--%>
+								   <%--class="form-control"></td>--%>
+					<%--</tr>--%>
+					<%--<tr>--%>
+						<%--<td>支付时间</td>--%>
+						<%--<td><input id="payDate" name="payDate" type="text"--%>
+								   <%--class="form-control"></td>--%>
+					<%--</tr>--%>
 
-					<tr class="submitTR">
-						<td colspan="2" align="center">
-							<input type="hidden" name="id" value="${o.id}">
-							<button type="submit" class="btn btn-success">提 交</button>
-						</td>
-					</tr>
-				</table>
-			</form>
-		</div>
-	</div>
+					<%--<tr class="submitTR">--%>
+						<%--<td colspan="2" align="center">--%>
+							<%--<input type="hidden" name="id" value="${o.id}">--%>
+							<%--<button type="submit" class="btn btn-success">提 交</button>--%>
+						<%--</td>--%>
+					<%--</tr>--%>
+				<%--</table>--%>
+			<%--</form>--%>
+		<%--</div>--%>
+
+	<%--</div>--%>
+
 
 </div>
 
